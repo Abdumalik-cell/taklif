@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="uz">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Uchrashuv taklifi 💌</title>
+		<!-- Tailwind CSS CDN -->
+		<script src="https://cdn.tailwindcss.com"></script>
+		<style>
+			@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+			body {
+				font-family: 'Poppins', sans-serif;
+			}
+		</style>
+	</head>
+	<body class="bg-pink-50 flex items-center justify-center min-h-screen overflow-hidden relative">
+		<!-- SAHIFA 1: Savol -->
+		<div id="page-1" class="bg-white p-8 rounded-3xl shadow-xl w-full max-w-sm text-center z-10">
+			<h1 class="text-2xl font-bold mb-6 text-gray-800">Qachondir Uchrashamizmi Durdona? 💖</h1>
+			<div class="flex justify-center items-center gap-4">
+				<button
+					onclick="showPage2()"
+					class="bg-pink-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-pink-600 transition shadow-lg">
+					Ha! 🥰
+				</button>
+
+				<!-- YO'Q tugmasi (Butun ekran bo'ylab qochadi) -->
+				<button
+					id="no-btn"
+					onmouseover="moveNoBtn()"
+					onclick="moveNoBtn()"
+					class="bg-gray-200 text-gray-700 px-8 py-3 rounded-full font-semibold transition-all">
+					Yo'q 😢
+				</button>
+			</div>
+		</div>
+
+		<!-- SAHIFA 2: Forma va Thank You -->
+		<div id="page-2" class="hidden bg-white p-8 rounded-3xl shadow-xl w-full max-w-sm text-center z-10">
+			<div id="form-container">
+				<h2 class="text-xl font-bold mb-4 text-gray-800">Ajoyib qayerga boramiz? ✨</h2>
+				<div class="space-y-4 text-left">
+					<div>
+						<label class="block text-sm font-medium text-gray-700 mb-1">Manzil</label>
+						<select id="place" class="w-full p-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-400">
+							<option value="Kafe ☕">Kafe ☕</option>
+							<option value="Bog' 🌳">Bog' 🌳</option>
+							<option value="Kino 🎬">Kino 🎬</option>
+							<option value="Restoran 🍽️">Restoran 🍽️</option>
+						</select>
+					</div>
+					<div>
+						<label class="block text-sm font-medium text-gray-700 mb-1">Sana va vaqt</label>
+						<input
+							type="datetime-local"
+							id="datetime"
+							class="w-full p-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-400" />
+					</div>
+				</div>
+				<button
+					onclick="submitData()"
+					class="bg-pink-500 text-white w-full py-3 rounded-xl font-semibold hover:bg-pink-600 mt-6 shadow-lg">
+					Jo'natish 🚀
+				</button>
+			</div>
+
+			<!-- Thank you xabari -->
+			<div id="thank-you" class="hidden py-4">
+				<div class="text-5xl mb-4 animate-bounce">🎉</div>
+				<h2 class="text-2xl font-bold text-gray-800 mb-2">Rahmat! 🥰</h2>
+				<p class="text-gray-600 text-sm">Uchrashuv vaqti saqlandi. Seni sabrsizlik bilan kutaman!</p>
+			</div>
+		</div>
+
+		<script>
+			function showPage2() {
+				document.getElementById('page-1').classList.add('hidden');
+				document.getElementById('page-2').classList.remove('hidden');
+			}
+
+			function moveNoBtn() {
+				const btn = document.getElementById('no-btn');
+
+				// Tugmani fixed qilib, butun ekran bo'ylab harakatlantiramiz
+				btn.style.position = 'fixed';
+
+				const maxX = window.innerWidth - btn.offsetWidth - 50;
+				const maxY = window.innerHeight - btn.offsetHeight - 50;
+
+				const randomX = Math.random() * maxX;
+				const randomY = Math.random() * maxY;
+
+				btn.style.left = `${Math.max(20, randomX)}px`;
+				btn.style.top = `${Math.max(20, randomY)}px`;
+			}
+
+			async function submitData() {
+				const place = document.getElementById('place').value;
+				const datetime = document.getElementById('datetime').value;
+
+				// O'zingiz bergan Google Apps Script havolasi
+				const scriptURL =
+					'https://script.google.com/macros/s/AKfycbymNPpLjf-G1Cs4AhQbLiAWLO6F_NWSYfjMecLmmzvAwOrftpbmQRBF9sOnHMRvUTxb/exec';
+
+				try {
+					await fetch(scriptURL, {
+						method: 'POST',
+						mode: 'no-cors',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({ place, datetime }),
+					});
+				} catch (error) {
+					console.error('Xatolik!', error);
+				}
+
+				// Thank you qismiga o'tish
+				document.getElementById('form-container').classList.add('hidden');
+				document.getElementById('thank-you').classList.remove('hidden');
+			}
+		</script>
+	</body>
+</html>
